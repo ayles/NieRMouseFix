@@ -1,1 +1,0 @@
-__declspec(dllexport) void get_delta_angle(long x_sens, float *x_delta_angle, long y_sens, float *y_delta_angle);
