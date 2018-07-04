@@ -12,6 +12,6 @@ There is one function:
 
 `x_delta_angle` and `y_delta_angle` are pointers to values which will be used to change rotation of the camera (in radians).
 
-You can recompile it and just put in your game folder (with patched `NierAutomata.exe`, of course).
+You can recompile it and just put in your game folder (with patched `NierAutomata.exe`, of course). Note, you need to compile it as 64-bit. I tested only with the Visual Studio compiler.
 
-Note, you need to compile it as 64-bit. I tested only with the Visual Studio compiler.
+For better experience set `Vertical Auto Adjust`, `Horizontal Auto Adjust` and `Pursuit Speed` to max values.
