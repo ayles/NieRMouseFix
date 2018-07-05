@@ -5,8 +5,8 @@ How it works: I patched the [NieRAutomata.exe](https://drive.google.com/open?id=
 There is one function:
 
 ```c++
-rotate_camera(int x_sensitivity, float *x_camera_angle, bool x_invert, 
-              int y_sensitivity, float *y_camera_angle, bool y_invert, bool y_lock);
+void rotate_camera(int x_sensitivity, float *x_camera_angle, bool x_invert, 
+                   int y_sensitivity, float *y_camera_angle, bool y_invert, bool y_lock);
 ```
 
 ###Parameters:
@@ -14,6 +14,7 @@ rotate_camera(int x_sensitivity, float *x_camera_angle, bool x_invert,
 `x_sensitivity` and `y_sensitivity` are `Horizontal Rotation Speed` and `Vertical Rotation Speed` settings respectively.
 
 `x_camera_angle` and `y_camera_angle` are pointers to camera rotation values (in radians). 
+
 (Note that camera smoothing still will be applied after, so use `Vertical Auto Adjust` and `Horizontal Auto Adjust` with max values if you want)
 
 `x_invert` and `y_invert` - flags indicating whether to invert the value or not (`Horizontal Orientation` and `Vertical Orientation`).
