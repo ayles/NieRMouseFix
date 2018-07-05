@@ -9,7 +9,7 @@ void rotate_camera(int x_sensitivity, float *x_camera_angle, bool x_invert,
                    int y_sensitivity, float *y_camera_angle, bool y_invert, bool y_lock);
 ```
 
-###Parameters:
+### Parameters:
 
 `x_sensitivity` and `y_sensitivity` are `Horizontal Rotation Speed` and `Vertical Rotation Speed` settings respectively.
 
@@ -27,7 +27,7 @@ Note, you need to compile it as 64-bit. It was tested only with Visual Studio co
 
 For better experience set `Vertical Auto Adjust`, `Horizontal Auto Adjust` and `Pursuit Speed` to their max values.
 
-###Thoughts&Plans:
+### Thoughts&Plans:
 
 Actually, saving `x_camera_angle` is very useful when playing,
 but due to the fact that the camera rotates before smoothing, in cutscenes our camera can still be controlled by the game,
