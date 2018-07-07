@@ -1,3 +1,18 @@
-extern "C" __declspec(dllexport) void
-rotate_camera(int x_sensitivity, float *x_camera_angle, bool x_invert,
-              int y_sensitivity, float *y_camera_angle, bool y_invert, bool y_lock);
+#include <windows.h>
+
+#pragma pack(push, 4)
+
+template<typename T>
+struct CameraAxesValues {
+    T vertical;
+    T horizontal;
+};
+
+#pragma pack(pop)
+
+extern "C" __declspec(dllexport)
+void UpdateCameraRotation(CameraAxesValues<float> *axes_rotation, CameraAxesValues<int> *axes_sensitivity,
+                          CameraAxesValues<bool> *axes_invert, bool lock_vertical_axes);
+
+
+extern "C" __declspec(dllexport) BOOL WINAPI DllMain(_In_ HINSTANCE, _In_ DWORD, _In_ LPVOID);

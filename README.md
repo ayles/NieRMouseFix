@@ -1,43 +1,37 @@
 # NieRMouseFix
 
-How it works: I patched the [NieRAutomata.exe](https://drive.google.com/open?id=1QKWGeUwlmyrZCz3OKd7nNDJbKRup2r3J) file, now it loads this library and uses it to change rotation of the camera.
+__How to:__ add this library as dependency to __NieRAutomata.exe__ or to any lib it uses.
+I prepared one for you (__dxgi.dll__). You can find it [here](https://github.com/ayles/NieRMouseFix/releases).
+Put `mouse_patch.dll` along with `dxgi.dll` in game folder and enjoy!
 
-There is one function:
+There is one function (not actually one, but...):
 
 ```c++
-void rotate_camera(int x_sensitivity, float *x_camera_angle, bool x_invert, 
-                   int y_sensitivity, float *y_camera_angle, bool y_invert, bool y_lock);
+void UpdateCameraRotation(CameraAxesValues<float> *axes_rotation, CameraAxesValues<int> *axes_sensitivity,
+                          CameraAxesValues<bool> *axes_invert, bool lock_vertical_axes);
 ```
 
-###Parameters:
+### Parameters:
 
-`x_sensitivity` and `y_sensitivity` are `Horizontal Rotation Speed` and `Vertical Rotation Speed` settings respectively.
+`axes_rotation` - structure with camera vertical and horizontal rotation (in radians).
 
-`x_camera_angle` and `y_camera_angle` are pointers to camera rotation values (in radians). 
+`axes_sensitivity` - structure with `Vertical Rotation Speed` and `Horizontal Rotation Speed` settings.
 
-(Note that camera smoothing still will be applied after, so use `Vertical Auto Adjust` and `Horizontal Auto Adjust` with max values if you want)
+`axes_invert` - structure with `Vertical Orientation` and `Horizontal Orientation` settings.
 
-`x_invert` and `y_invert` - flags indicating whether to invert the value or not (`Horizontal Orientation` and `Vertical Orientation`).
+`lock_vertical_axes` - really I don't know what it is used for, so just use it like I do.
 
-`y_lock` - it is used for limiting vertical camera rotation i think.
+Note that camera smoothing still will be applied after, so use `Vertical Auto Adjust` and `Horizontal Auto Adjust` with max values if you want.
 
 ### Some info:
-You can recompile it and just put in your game folder (with patched `NieRAutomata.exe`, of course). 
-Note, you need to compile it as 64-bit. It was tested only with Visual Studio compiler.
+In `DllMain` library tries to find function signature in loaded game module. 
+It relies on commands sequence so it __isn't really reliable__. 
+
+Since I do not have money for the game so far, I rely only on an unofficial copy, so I do not know if it will work for you. 
+Open issue if something does not work.
+
+You can compile it and just put in your game folder (with my `dxgi.dll` or your own). 
+
+Note, you need to compile it as __64-bit__ and it will work only with __Visual Studio compiler__.
 
 For better experience set `Vertical Auto Adjust`, `Horizontal Auto Adjust` and `Pursuit Speed` to their max values.
-
-###Thoughts&Plans:
-
-Actually, saving `x_camera_angle` is very useful when playing,
-but due to the fact that the camera rotates before smoothing, in cutscenes our camera can still be controlled by the game,
-and after cutscenes saved `x_camera_angle` will be set and camera will jerk.
-
-There are 2 possible solutions to solve this:
-            
-1. Modify actual camera rotation and write custom smooth
-(i don't want to cause i'm so lazy and blah-blah-blah)
-2. Pass smth like `cutscene_playing` flag to function. It is easier but still little difficult
-
-Also i would like to make it possible to save `y_camera_angle` because otherwise "run and look around" is not very convenient.
-I will work at it first.
