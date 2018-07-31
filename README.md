@@ -1,8 +1,9 @@
 # NieRMouseFix
 
-__How to:__ add this library as dependency to __NieRAutomata.exe__ or to any lib it uses.
-I prepared one for you (__dxgi.dll__). You can find it [here](https://github.com/ayles/NieRMouseFix/releases).
+__How to:__ 
 Put `mouse_patch.dll` along with `dxgi.dll` in game folder and enjoy!
+You can get it here:
+https://github.com/ayles/NieRMouseFix/releases
 
 There is one function (not actually one, but...):
 
