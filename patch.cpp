@@ -5,11 +5,10 @@
 
 #include <distorm.h>
 
+#include <Psapi.h>
 #include <string>
 #include <cmath>
-#include <regex>
-#include <psapi.h>
-#include <windows.h>
+#include <algorithm>
 
 typedef unsigned char ubyte;
 
@@ -35,9 +34,8 @@ void Initialize() {
 
 void UpdateCameraRotation(CameraAxesValues<float> *axes_rotation, CameraAxesValues<int> *axes_sensitivity,
                           CameraAxesValues<bool> *axes_invert, bool lock_vertical_axes) {
-    Initialize();
-
     static CameraAxesValues<float> axes_rotation_saved = *axes_rotation;
+    Initialize();
 
     RECT window_rect;
     GetWindowRect(game_window_handle, &window_rect);
@@ -126,7 +124,7 @@ ubyte inject_instructions[] {
         0xF3, 0x0F, 0x10, 0x83, 0xF4, 0x03, 0x00, 0x00      // movss xmm0, [rbx+0x3f4]  (let game clamp rotation to [-PI; PI])
 };
 
-ubyte nop_instruction = 0x90;
+ubyte nop_instruction = (ubyte)0x90;
 
 const ubyte *FindPattern(const long *pattern, const int pattern_size, const ubyte *start, const size_t size) {
     const ubyte *end = start + size;
@@ -149,7 +147,7 @@ BOOL WINAPI DllMain(_In_ HINSTANCE, _In_ DWORD reason, _In_ LPVOID) {
 
     // Query information about our .exe
     MODULEINFO module_info;
-    GetModuleInformation(GetCurrentProcess(), GetModuleHandle("NieRAutomata.exe"), &module_info, sizeof(module_info));
+    GetModuleInformation(GetCurrentProcess(), GetModuleHandle(nullptr), &module_info, sizeof(module_info));
 
     auto module_base_ptr = static_cast<const ubyte *>(module_info.lpBaseOfDll);
     auto module_end_ptr = module_base_ptr + module_info.SizeOfImage;
@@ -164,9 +162,7 @@ BOOL WINAPI DllMain(_In_ HINSTANCE, _In_ DWORD reason, _In_ LPVOID) {
 
         current_ptr = static_cast<const ubyte *>(memory_info.BaseAddress) + memory_info.RegionSize;
 
-        if (memory_info.State == MEM_COMMIT && memory_info.Type == MEM_IMAGE &&
-            memory_info.Protect == PAGE_EXECUTE_WRITECOPY) {
-
+        if (memory_info.State == MEM_COMMIT && memory_info.Type == MEM_IMAGE) {
             pattern_instructions_ptr = FindPattern(pattern_instructions, sizeof(pattern_instructions) / sizeof(long),
                                                    static_cast<const ubyte *>(memory_info.BaseAddress),
                                                    memory_info.RegionSize);
@@ -215,7 +211,7 @@ BOOL WINAPI DllMain(_In_ HINSTANCE, _In_ DWORD reason, _In_ LPVOID) {
 
     // Fill all bytes before call instruction with NOPes
     for (auto i = pattern_instructions_ptr + sizeof(inject_instructions); i < call_instruction_ptr; ++i) {
-        *const_cast<unsigned char *>(i) = nop_instruction;
+        WriteProcessMemory(GetCurrentProcess(), (LPVOID)i, &nop_instruction, 1, nullptr);
     }
 
     return true;
