@@ -105,7 +105,8 @@ ubyte inject_instructions[] {
         0x52,                                               // push rdx
         0x41, 0x50,                                         // push r8
         0x41, 0x51,                                         // push r9
-        0x48, 0x8D, 0x05, 0xE2, 0xFF, 0xFF, 0xFF,           // lea rax, [rip-0x1e]  (mov data pointer to rax)
+        0x41, 0x51,                                         // push r9              (do it twice to keep stack 16-aligned)
+        0x48, 0x8D, 0x05, 0xE0, 0xFF, 0xFF, 0xFF,           // lea rax, [rip-0x1e]  (mov data pointer to rax)
         0x48, 0x8D, 0x8B, 0xF0, 0x03, 0x00, 0x00,           // lea rcx, [rbx+0x3f0] (1 param)
         0x48, 0x8B, 0x10,                                   // mov rdx, [rax]       (2 param)
         0x4C, 0x8D, 0x83, 0xD4, 0x05, 0x00, 0x00,           // lea r8, [rbx+0x5d4]  (3 param)
@@ -117,6 +118,7 @@ ubyte inject_instructions[] {
         0xFF, 0x10,                                         // call [rax]           (call it)
         0x48, 0x83, 0xC4, 0x20,                             // add rsp, 0x20        (clean up stack)
         0x41, 0x59,                                         // pop r9               (restore registers)
+        0x41, 0x59,                                         // pop r9
         0x41, 0x58,                                         // pop r8
         0x5A,                                               // pop rdx
         0x59,                                               // pop rcx
